@@ -1,0 +1,153 @@
+/* ========== Grundlayout ========== */
+body {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: #f8f9fb;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* ========== Navigation ========== */
+nav {
+    background-color: #004aad;
+    color: white;
+    padding: 12px 25px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+nav a:hover {
+    text-decoration: underline;
+    color: #dfe9ff;
+}
+
+/* ========== Hauptcontainer ========== */
+main, div[role="main"], body > div {
+    max-width: 800px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* ========== Überschriften ========== */
+h1, h2, h3 {
+    color: #004aad;
+    margin-bottom: 10px;
+}
+
+/* ========== Buttons ========== */
+button, input[type="submit"] {
+    background-color: #004aad;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #00327d;
+}
+
+/* ========== Formulare ========== */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+input, select, textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+    font-size: 14px;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #004aad;
+    box-shadow: 0 0 3px rgba(0,74,173,0.3);
+}
+
+/* ========== Karten / Boxen ========== */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    background: #fafbfc;
+}
+
+.card strong {
+    color: #004aad;
+}
+
+/* ========== Alerts / Status ========== */
+.alert-success {
+    color: #0a7f1c;
+    background: #e6f9eb;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.alert-error {
+    color: #b30000;
+    background: #fdeaea;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+/* ========== Fragebogen ========== */
+.question-block {
+    margin-bottom: 25px;
+}
+
+.question-block p {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.question-block label {
+    display: block;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+/* ========== Details (Antworten anzeigen) ========== */
+details summary {
+    cursor: pointer;
+    color: #004aad;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+details summary:hover {
+    text-decoration: underline;
+}
+
+/* ========== Responsive Design ========== */
+@media (max-width: 600px) {
+    nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    main, div[role="main"], body > div {
+        margin: 20px;
+        padding: 20px;
+    }
+}

@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="dashboard-container">
+    <h1>Dashboard</h1>
+    <hr>
+
+    {% if not_logged_in %}
+        <section class="dashboard-section not-logged-in">
+            <h2>⚠️ Zugriff verweigert</h2>
+            <p>Sie sind nicht angemeldet. Bitte <a href="/login">melden Sie sich an</a>, um das Dashboard zu sehen.</p>
+        </section>
+
+    {% elif user.is_superuser %}
+        <!-- 🟣 ADMIN DASHBOARD -->
+        <section class="dashboard-section admin-dashboard">
+            <h2>👑 Admin Bereich</h2>
+
+            <form method="post" class="assign-form">
+                {% csrf_token %}
+                
+                <label for="practitioner_id">Practitioner:</label>
+                <select name="practitioner_id" id="practitioner_id" required>
+                    <option value="">-- Wähle Practitioner --</option>
+                    {% for practitioner in practitioners %}
+                        <option value="{{ practitioner.id }}">
+                            {{ practitioner.user.username }} ({{ practitioner.specialization }})
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <label for="patient_id">Patient:</label>
+                <select name="patient_id" id="patient_id" required>
+                    <option value="">-- Wähle Patient --</option>
+                    {% for patient in patients %}
+                        <option value="{{ patient.id }}">{{ patient.user.username }}</option>
+                    {% endfor %}
+                </select>
+
+                <input type="submit" value="Zuweisen" class="btn">
+            </form>
+
+            {% if status_message %}
+                <p class="status-message success">{{ status_message }}</p>
+            {% endif %}
+        </section>
+
+    {% elif user.is_staff %}
+        <!-- 🔵 PRACTITIONER DASHBOARD -->
+        <section class="dashboard-section practitioner-dashboard">
+            <h2>🩺 Practitioner Dashboard</h2>
+
+            {% if practitioner_patients %}
+                {% for patient in practitioner_patients %}
+                    <div class="patient-card">
+                        <h3>👤 {{ patient.user.username }}</h3>
+
+                        {% if patient.questionare_completed %}
+                            <p class="completed">✅ Fragebogen ausgefüllt</p>
+                            <details>
+                                <summary>Antworten anzeigen</summary>
+                                <ul>
+                                    {% for question, answer in patient.questionare_data.items %}
+                                        <li><strong>{{ question }}</strong>: {{ answer }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </details>
+                        {% else %}
+                            <p class="not-completed">❌ Fragebogen noch nicht ausgefüllt</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Keine Patienten zugewiesen.</p>
+            {% endif %}
+        </section>
+
+    {% elif user.is_authenticated %}
+        <!-- 🟢 PATIENT DASHBOARD -->
+        <section class="dashboard-section patient-dashboard">
+            <h2>👤 Patient Dashboard</h2>
+
+            {% if assigned_practitioner %}
+                <div class="assigned-box">
+                    <p>👨‍⚕️ <strong>Ihr zugewiesener Practitioner:</strong> 
+                        {{ assigned_practitioner.user.username }} 
+                        ({{ assigned_practitioner.specialization }})
+                    </p>
+                </div>
+            {% else %}
+                <p class="no-practitioner">❌ Es wurde Ihnen noch kein Practitioner zugewiesen.</p>
+            {% endif %}
+
+            {% if patient_fragebogen %}
+                <p class="completed">✅ Fragebogen abgeschlossen</p>
+            {% else %}
+                <p class="not-completed">❌ Fragebogen noch nicht ausgefüllt</p>
+                <a href="{% url 'fill_questionaire' %}">
+                    <button class="btn">Zum Fragebogen</button>
+                </a>
+            {% endif %}
+        </section>
+    {% endif %}
+</div>
+
+
+
+
+
+
+<style>
+details summary:hover {
+    text-decoration: underline;
+}
+</style>
+
+{% endblock content %}
