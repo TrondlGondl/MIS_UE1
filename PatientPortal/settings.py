@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -69,15 +70,56 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'PatientPortal.wsgi.application'
 
+secrets = {
+    "AZURE_SQL_SERVERNAME": "misue1",
+    "AZURE_SQL_HOST": "misue1.database.windows.net",
+    "AZURE_SQL_USERNAME": "trondlgondl",
+    "AZURE_SQL_DATABASE": "misue1",
+    "AZURE_SQL_PASSWORD": "K2g48s9h0!"
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+def inferDatabaseConfiguration():
+    #check if azure db is configured
+    if "AZURE_SQL_HOST" in secrets:
+        return{
+
+            "ENGINE": "mssql",
+            "NAME": secrets["AZURE_SQL_DATABASE"], 
+            "USER": f"{secrets["AZURE_SQL_USERNAME"]}@{secrets["AZURE_SQL_SERVERNAME"]}",
+            "PASSWORD": secrets["AZURE_SQL_PASSWORD"],
+            "HOST": secrets["AZURE_SQL_HOST"],
+            "PORT": "",
+            "OPTIONS": 
+                {
+                    'driver': 'ODBC Driver 18 for SQL Server'
+                },
+
+
+        }
+
+    #todo check if program runs in a container and postgres is availabel
+    if "POSTGRES_HOST" in os.environ:
+        return {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ["POSTGRES_DB"],
+            "USER": os.environ["POSTGRES_USER"],
+            "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+            "HOST": os.environ["POSTGRES_HOST"],
+            "PORT": os.environ["POSTGRES_PORT"],
+        }
+
+    return {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+
+
+
+DATABASES = {
+    'default': inferDatabaseConfiguration() 
 }
 
 
