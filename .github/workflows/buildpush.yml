@@ -46,7 +46,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # automatically deploy web app    
+      ## automatically deploy web app    
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
