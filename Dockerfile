@@ -14,8 +14,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1 
 
 # ubstall odbc shared objects for azure sql to work
-#RUN apt update -y 
-#RUN apt install unixodbc -y 
+RUN apt update -y 
+RUN apt install unixodbc -y 
 
 # Upgrade pip
 RUN pip install --upgrade pip 
@@ -32,10 +32,10 @@ COPY . .
 # Expose the Django port
 EXPOSE 8000
 
-RUN apt-get update -y
-RUN apt install unixodbc -y
+##RUN apt-get update -y
+##RUN apt install unixodbc -y
 
-HEALTHCHECK --interval=5m --timeout=3s --retries=3 CMD curl http://localhost:8000/admin || exit 1
+#HEALTHCHECK --interval=5m --timeout=3s --retries=3 CMD curl http://localhost:8000/admin || exit 1
  
 # Run Django’s development server
 CMD ["sh", "docker-entrypoint.sh"]

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-_%omx#^o_8j6ytiq6q0ty5+c^36+!^8b^8ve-9t!3!lo87fb5g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -84,20 +84,16 @@ secrets = {
 def inferDatabaseConfiguration():
     #check if azure db is configured
     if "AZURE_SQL_HOST" in secrets:
-        return{
-
+        return {
             "ENGINE": "mssql",
             "NAME": secrets["AZURE_SQL_DATABASE"], 
             "USER": f"{secrets["AZURE_SQL_USERNAME"]}@{secrets["AZURE_SQL_SERVERNAME"]}",
             "PASSWORD": secrets["AZURE_SQL_PASSWORD"],
             "HOST": secrets["AZURE_SQL_HOST"],
             "PORT": "",
-            "OPTIONS": 
-                {
-                    'driver': 'ODBC Driver 18 for SQL Server'
-                },
-
-
+            "OPTIONS": {
+                'driver': 'ODBC Driver 18 for SQL Server'
+            }
         }
 
     #todo check if program runs in a container and postgres is availabel
