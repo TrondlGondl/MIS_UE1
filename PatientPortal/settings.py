@@ -80,7 +80,7 @@ secrets = {
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+#
 def inferDatabaseConfiguration():
     #check if azure db is configured
     if "AZURE_SQL_HOST" in secrets:
