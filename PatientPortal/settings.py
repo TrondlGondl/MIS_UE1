@@ -73,19 +73,38 @@ WSGI_APPLICATION = 'PatientPortal.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 #
+secrets = {
+   "AZURE_SQL_SERVERNAME" : "misue1",
+    "AZURE_SQL_HOST": "misue1.database.windows.net",
+    "AZURE_SQL_USERNAME" : "trondlgondl",
+    "AZURE_SQL_DATABASE" : " misue1",
+    "AZURE_SQL_PASSWORD" : "K2g48s9h0"
+}
+
+
+# Database
+# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+ 
+
+
 def inferDatabaseConfiguration():
     #check if azure db is configured
-    if os.environ.get("AZURE_SQL_HOST"):
-        return {
+    if "AZURE_SQL_HOST" in secrets:
+        return{
+
             "ENGINE": "mssql",
-            "NAME": os.environ.get("AZURE_SQL_DATABASE"), 
-            "USER": f"{os.environ.get('AZURE_SQL_USERNAME')}@{os.environ.get('AZURE_SQL_SERVERNAME')}",
-            "PASSWORD": os.environ.get("AZURE_SQL_PASSWORD"),
-            "HOST": os.environ.get("AZURE_SQL_HOST"),
+            "NAME": secrets["AZURE_SQL_DATABASE"], 
+            "USER": f"{secrets["AZURE_SQL_USERNAME"]}@{secrets["AZURE_SQL_SERVERNAME"]}",
+            "PASSWORD": secrets["AZURE_SQL_PASSWORD"],
+            "HOST": secrets["AZURE_SQL_HOST"],
             "PORT": "",
-            "OPTIONS": {
-                'driver': 'ODBC Driver 18 for SQL Server'
-            }
+            "OPTIONS": 
+                {
+                    'driver': 'ODBC Driver 18 for SQL Server'
+                },
+
+
         }
 
     #todo check if program runs in a container and postgres is availabel
@@ -109,6 +128,7 @@ def inferDatabaseConfiguration():
 DATABASES = {
     'default': inferDatabaseConfiguration() 
 }
+
 
 
 # Password validation

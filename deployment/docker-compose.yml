@@ -1,0 +1,18 @@
+services:
+  djangoapp:
+    image: ghcr.io/trondlgondl/mis_ue1:latest
+    env_file: production.env
+    # depends_on:
+    #   - db
+    ports:
+      - "8000:8000"
+    
+
+
+  # db:
+  #   image: docker.io/library/postgres:latest
+  #   restart: no
+  #   env_file: production.env
+  #   ports:
+  #    - "5432:5432"
+      
