@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["https://misue1-h6a8habzbseyb0hs.swedencentral-01.azurewebsites.net"]
 
 
 # Application definition
