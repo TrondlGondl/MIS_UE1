@@ -1,41 +1,48 @@
 # Use the official Python runtime image
 FROM python:3.13  
- 
+
 # Create the app directory
 RUN mkdir /app
- 
+
 # Set the working directory inside the container
 WORKDIR /app
- 
-# Set environment variables 
-# Prevents Python from writing pyc files to disk
-ENV PYTHONDONTWRITEBYTECODE=1
-#Prevents Python from buffering stdout and stderr
-ENV PYTHONUNBUFFERED=1 
 
-# ubstall odbc shared objects for azure sql to work
-RUN apt update -y 
-RUN apt install unixodbc -y 
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Install unixODBC and Microsoft ODBC Driver 18 for SQL Server
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg \
+    ca-certificates \
+    apt-transport-https \
+    unixodbc \
+    unixodbc-dev
+
+# Add Microsoft package repo (Debian 12 / bookworm)
+RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/debian/12/prod bookworm main" \
+        > /etc/apt/sources.list.d/mssql-release.list
+
+# Install the ODBC driver
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql18
+
 
 # Upgrade pip
 RUN pip install --upgrade pip 
- 
-# Copy the Django project  and install dependencies
-COPY requirements.txt  /app/
- 
-# run this command to install all dependencies 
+
+# Copy dependencies
+COPY requirements.txt /app/
+
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
- 
-# Copy the Django project to the container
+
+# Copy the entire project
 COPY . .
- 
-# Expose the Django port
+
+# Expose Django port
 EXPOSE 8000
 
-##RUN apt-get update -y
-##RUN apt install unixodbc -y
-
-#HEALTHCHECK --interval=5m --timeout=3s --retries=3 CMD curl http://localhost:8000/admin || exit 1
- 
-# Run Django’s development server
+# Run the entrypoint script
 CMD ["sh", "docker-entrypoint.sh"]

@@ -74,10 +74,10 @@ WSGI_APPLICATION = 'PatientPortal.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 #
 secrets = {
-   "AZURE_SQL_SERVERNAME" : "misue1",
+    "AZURE_SQL_SERVERNAME" : "misue1",
     "AZURE_SQL_HOST": "misue1.database.windows.net",
     "AZURE_SQL_USERNAME" : "trondlgondl",
-    "AZURE_SQL_DATABASE" : " misue1",
+    "AZURE_SQL_DATABASE" : "misue1",
     "AZURE_SQL_PASSWORD" : "K2g48s9h0"
 }
 
@@ -89,25 +89,21 @@ secrets = {
 
 
 def inferDatabaseConfiguration():
-    #check if azure db is configured
     if "AZURE_SQL_HOST" in secrets:
         return{
-
             "ENGINE": "mssql",
-            "NAME": secrets["AZURE_SQL_DATABASE"], 
-            "USER": f"{secrets["AZURE_SQL_USERNAME"]}@{secrets["AZURE_SQL_SERVERNAME"]}",
+            "NAME": secrets["AZURE_SQL_DATABASE"].strip(),
+            "USER": "trondlgondl@misue1",
             "PASSWORD": secrets["AZURE_SQL_PASSWORD"],
             "HOST": secrets["AZURE_SQL_HOST"],
-            "PORT": "",
-            "OPTIONS": 
-                {
-                    'driver': 'ODBC Driver 18 for SQL Server'
-                },
-
-
+            "PORT": "1433",
+            "OPTIONS": {
+                'driver': 'ODBC Driver 18 for SQL Server',
+                'Encrypt': 'yes',
+                'TrustServerCertificate': 'yes',
+            },
         }
 
-    #todo check if program runs in a container and postgres is availabel
     if "POSTGRES_HOST" in os.environ:
         return {
             "ENGINE": "django.db.backends.postgresql",
@@ -122,7 +118,6 @@ def inferDatabaseConfiguration():
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-
 
 
 DATABASES = {
