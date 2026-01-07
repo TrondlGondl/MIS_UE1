@@ -10,7 +10,9 @@ echo "✅ DB bereit, starte Django..."
 python manage.py migrate --noinput
 
 # Start Uvicorn
-python -m uvicorn --host 0.0.0.0 --port 8000 PatientPortal.asgi:application
+PORT=${PORT:-8000}
+python -m uvicorn --host 0.0.0.0 --port $PORT PatientPortal.asgi:application
+
 EXIT_CODE=$?
 
 # If Uvicorn exited with an error, send notification
