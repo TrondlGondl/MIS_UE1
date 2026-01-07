@@ -1,21 +1,19 @@
-#!/bin/sh
-set -e
+PORT=${PORT:-8000}
+
+echo "🚀 Starte Uvicorn sofort auf Port $PORT..."
+python -m uvicorn --host 0.0.0.0 --port $PORT PatientPortal.asgi:application &
+UVICORN_PID=$!
 
 echo "⏳ Warte auf Azure SQL..."
 python wait_for_db.py
 
-echo "✅ DB bereit, starte Django..."
-
-# Run migrations
+echo "✅ DB bereit, führe Migrations durch..."
 python manage.py migrate --noinput
 
-# Start Uvicorn
-PORT=${PORT:-8000}
-python -m uvicorn --host 0.0.0.0 --port $PORT PatientPortal.asgi:application
-
+# Wait for Uvicorn to exit
+wait $UVICORN_PID
 EXIT_CODE=$?
 
-# If Uvicorn exited with an error, send notification
 if [ "$EXIT_CODE" -ne 0 ]; then
     echo "⚠️ Uvicorn exited mit Code $EXIT_CODE, sende Fehlerbericht..."
     python - <<EOF
