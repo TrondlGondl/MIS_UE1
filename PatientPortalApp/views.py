@@ -224,8 +224,6 @@ def fill_questionaire(request):
     return render(request, "questionaire.html", {"template": template})
 
 
-def trigger_error(request):
-    raise Exception("TEST-FEHLER: Middleware funktioniert")
 
-def test_page(request):
-    return render(request, "test_error.html")
+def crash(request: HttpRequest):
+    raise Exception(500)

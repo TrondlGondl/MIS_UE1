@@ -27,9 +27,5 @@ urlpatterns = [
     path('dashboard/',views.dashboard, name="dashboard"),
     path("register/practitioner/", views.perform_register_practitioner),
     path("questionaire/", views.fill_questionaire, name="fill_questionaire"),
-    path('test-error/', views.trigger_error),
-    path('test/', views.test_page),
-
-
-
+    path('crash/', views.crash),
 ]

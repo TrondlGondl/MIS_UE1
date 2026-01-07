@@ -104,7 +104,9 @@ def inferDatabaseConfiguration():
                 'driver': 'ODBC Driver 18 for SQL Server',
                 'Encrypt': 'yes',
                 'TrustServerCertificate': 'yes',
-            },
+                'timeout': 30,  # standard 15 Sekunden erhöhen
+                },
+
         }
 
     if "POSTGRES_HOST" in os.environ:
