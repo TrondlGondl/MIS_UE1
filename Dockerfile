@@ -28,7 +28,6 @@ RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor
 # Install the ODBC driver
 RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql18
 
-
 # Upgrade pip
 RUN pip install --upgrade pip 
 
