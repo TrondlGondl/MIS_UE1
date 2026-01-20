@@ -1,15 +1,15 @@
-import pyodbc
-import os
-import time
+import os, time, pyodbc
 from dotenv import load_dotenv
+from PatientPortalApp.error_notifier import sendError
 
 load_dotenv()
 
-# Ensure environment variables exist
 required_vars = ["AZURE_SQL_HOST", "AZURE_SQL_DATABASE", "AZURE_SQL_USER", "AZURE_SQL_PASSWORD"]
 for var in required_vars:
     if not os.getenv(var):
-        raise ValueError(f"Environment variable {var} is missing!")
+        e = ValueError(f"Environment variable {var} is missing!")
+        sendError(e)
+        raise e
 
 conn_str = (
     "Driver={ODBC Driver 18 for SQL Server};"
@@ -21,6 +21,8 @@ conn_str = (
     "TrustServerCertificate=yes;"
 )
 
+deadline = time.time() + 120  # z.B. 2 Minuten
+
 while True:
     try:
         conn = pyodbc.connect(conn_str, timeout=10)
@@ -30,6 +32,9 @@ while True:
         conn.close()
         print("✅ Azure SQL läuft")
         break
-    except pyodbc.Error as e:
-        print(f"⏳ Azure SQL schläft noch... ({e})")
+    except Exception as e:
+        print(f"⏳ Azure SQL noch nicht erreichbar... ({e})")
+        if time.time() > deadline:
+            sendError(e)
+            raise SystemExit(1)
         time.sleep(5)
