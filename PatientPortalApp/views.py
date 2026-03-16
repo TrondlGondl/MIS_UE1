@@ -225,5 +225,5 @@ def fill_questionaire(request):
 
 
 
-def crash(request: HttpRequest):
-    raise Exception("Middleware Exception Test")
+# def crash(request: HttpRequest):
+#     raise Exception("Middleware Exception Test")
