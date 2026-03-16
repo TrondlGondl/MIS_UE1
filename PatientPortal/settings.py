@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'PatientPortalApp.middleware.ExceptionNotificationMiddleware',
+    #'PatientPortalApp.middleware.ExceptionNotificationMiddleware',
 ]
 
 ROOT_URLCONF = 'PatientPortal.urls'
@@ -91,43 +91,43 @@ secrets = {
  
 
 
-def inferDatabaseConfiguration():
-    if "AZURE_SQL_HOST" in secrets:
-        return{
-            "ENGINE": "mssql",
-            "NAME": secrets["AZURE_SQL_DATABASE"].strip(),
-            "USER": "trondlgondl@misue1",
-            "PASSWORD": secrets["AZURE_SQL_PASSWORD"],
-            "HOST": secrets["AZURE_SQL_HOST"],
-            "PORT": "1433",
-            "OPTIONS": {
-                'driver': 'ODBC Driver 18 for SQL Server',
-                'Encrypt': 'yes',
-                'TrustServerCertificate': 'yes',
-                'timeout': 30,  # standard 15 Sekunden erhöhen
-                },
+# def inferDatabaseConfiguration():
+#     if "AZURE_SQL_HOST" in secrets:
+#         return{
+#             "ENGINE": "mssql",
+#             "NAME": secrets["AZURE_SQL_DATABASE"].strip(),
+#             "USER": "trondlgondl@misue1",
+#             "PASSWORD": secrets["AZURE_SQL_PASSWORD"],
+#             "HOST": secrets["AZURE_SQL_HOST"],
+#             "PORT": "1433",
+#             "OPTIONS": {
+#                 'driver': 'ODBC Driver 18 for SQL Server',
+#                 'Encrypt': 'yes',
+#                 'TrustServerCertificate': 'yes',
+#                 'timeout': 30,  # standard 15 Sekunden erhöhen
+#                 },
 
-        }
+#         }
 
-    if "POSTGRES_HOST" in os.environ:
-        return {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ["POSTGRES_DB"],
-            "USER": os.environ["POSTGRES_USER"],
-            "PASSWORD": os.environ["POSTGRES_PASSWORD"],
-            "HOST": os.environ["POSTGRES_HOST"],
-            "PORT": os.environ["POSTGRES_PORT"],
-        }
+#     if "POSTGRES_HOST" in os.environ:
+#         return {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": os.environ["POSTGRES_DB"],
+#             "USER": os.environ["POSTGRES_USER"],
+#             "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+#             "HOST": os.environ["POSTGRES_HOST"],
+#             "PORT": os.environ["POSTGRES_PORT"],
+#         }
 
-    return {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+#     return {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
 
 
-DATABASES = {
-    'default': inferDatabaseConfiguration() 
-}
+# DATABASES = {
+#     'default': inferDatabaseConfiguration() 
+# }
 
 
 
